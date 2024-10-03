@@ -1,8 +1,8 @@
-# animal-proc-anim
-Procedural animation of a fish, a snake, and a lizard.
+# Chillfish
+
+Fish swimming aimlessly around, intended to be used on a second monitor for relaxation while working on something else.
+
+Procedural animation of a fish based on the code by argonautcode (https://github.com/argonautcode/animal-proc-anim)
 Uses a 2D chain simulation for rigging.
 
-Demonstration + Explanation: https://www.youtube.com/watch?v=qlfh_rv6khY  
-[![Video thumbnail](https://img.youtube.com/vi/qlfh_rv6khY/0.jpg)](https://www.youtube.com/watch?v=qlfh_rv6khY)
-
-Originally created Mar 13, 2024.  
+![1727978243211](image/README/1727978243211.png)
