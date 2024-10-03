@@ -1,55 +1,31 @@
 Fish[] fishes;  // Array to hold multiple Fish objects
-
-boolean debug = false;
-int animal;
+boolean debug = false; // Debug mode toggle
+int animal; // Variable to switch between different animal behaviors
 int numFishes = 6;  // Number of fishes you want to create
 
+// Variables for ocean drawing
 float noiseScale = 0.02; // Scale of the noise
 float timeOffset = 0; // Offset for animation over time
 
+// Food variables
+PVector foodPosition; // Position of the food
+
 void setup() {
-  fullScreen(P2D);
-  frameRate(60);   // Set the frame rate to 60 frames per second
+    fullScreen(P2D);
+    frameRate(60);   // Set the frame rate to 60 frames per second
 
-  // Initialize the fishes array and create each fish
-  fishes = new Fish[numFishes];
-  for (int i = 0; i < numFishes; i++) {
-    // Randomize the initial position for each fish
-    fishes[i] = new Fish(new PVector(random(width), random(height)));
-  }
-}
-
-void drawOcean() {
-    // Set background color to a darker ocean color
-    background(0, 46, 71); // Dark ocean color
-    noStroke();
-
-    // Loop through the canvas to draw light spots
-    for (int x = 0; x < width + 320; x += 160) {
-        for (int y = 0; y < height + 320; y += 160) {
-            // Get noise value for this position
-            float n = noise(x * noiseScale, y * noiseScale, timeOffset);
-            
-            // Map the noise value directly to the blue component (0 to 255)
-            float blueComponent = map(n, 0, 1, 0, 150); // Directly map noise to blue component
-            
-            // Set fill color with the mapped blue component and some transparency
-            fill(0, 0, blueComponent, 80); // Fill with varying blue, keeping red and green at 0
-            
-            // Draw a large ellipse (light spot) at this position
-            ellipse(x, y, 320 * 2, 320 * 2); // Large ellipse for soft light effect
-        }
+    // Initialize the fishes array and create each fish
+    fishes = new Fish[numFishes];
+    for (int i = 0; i < numFishes; i++) {
+        // Randomize the initial position for each fish
+        fishes[i] = new Fish(new PVector(random(width), random(height)));
     }
-    
-    // Update the time offset to animate the noise
-    timeOffset += 0.005; // Change speed of animation here
 }
 
 void draw() {
-
-    drawOcean();
+    drawOcean(); // Draw the ocean background
     
-    if (debug) {
+     if (debug) {
       // Define the danger zone buffer size
       float dangerZone = 300;
     
@@ -104,5 +80,40 @@ void draw() {
             // Replace the exiting fish with a new fish spawned outside the screen
             fishes[i] = new Fish(spawnPos);
         }
+        
+    }
+}
+
+void drawOcean() {
+    // Set background color to a darker ocean color
+    background(0, 46, 71); // Dark ocean color
+    noStroke();
+
+    // Loop through the canvas to draw light spots
+    for (int x = 0; x < width + 320; x += 160) {
+        for (int y = 0; y < height + 320; y += 160) {
+            // Get noise value for this position
+            float n = noise(x * noiseScale, y * noiseScale, timeOffset);
+            
+            // Map the noise value directly to the blue component (0 to 255)
+            float blueComponent = map(n, 0, 1, 0, 150); // Directly map noise to blue component
+            
+            // Set fill color with the mapped blue component and some transparency
+            fill(0, 0, blueComponent, 80); // Fill with varying blue, keeping red and green at 0
+            
+            // Draw a large ellipse (light spot) at this position
+            ellipse(x, y, 320 * 2, 320 * 2); // Large ellipse for soft light effect
+        }
+    }
+    
+    // Update the time offset to animate the noise
+    timeOffset += 0.005; // Change speed of animation here
+}
+
+void mousePressed() {
+    // Spawn food at mouse position when clicked
+    foodPosition = new PVector(mouseX, mouseY);
+    for (int i = 0; i < numFishes; i++) {
+      fishes[i].followClick = true;
     }
 }

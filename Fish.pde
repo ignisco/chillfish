@@ -20,6 +20,8 @@ class Fish {
     
     float dangerZone = 300;  // Distance from the border that defines the danger zone
     float returnStrength = 0.11;  // Strength of adjustment to return to the safe zone
+    
+    boolean followClick = false; // Is currently following click of user instead of normal behaviour
 
     // Width of the fish at each vertebra
     float[] bodyWidth = {
@@ -73,24 +75,40 @@ class Fish {
     void resolve(Fish[] fishes) {
         PVector headPos = spine.joints.get(0);
         age++;  // Increment the age of the fish each frame
-
-        // Check if the fish has reached its lifetime
-        if (age >= lifetime) {
-            dangerZone = -300; // this makes the fish able to exit while moving normally
-        }
         
-        // Enter safe zone first, then move normally
-        if (isEnteringSafeZone) {
-          moveToSafeZone();
-        }
-        else {
-          normalMovement(fishes);
-          // Update the virtual mouse position based on its current direction
-          virtualMousePos.add(virtualMouseDir);
+        if (followClick) {
+          virtualMousePos = foodPosition;
+          speed = 2;
           
-          // Constrain the virtual mouse to stay within the canvas, but allow it to approach the edges
-          virtualMousePos.x = constrain(virtualMousePos.x, -200, width + 200);
-          virtualMousePos.y = constrain(virtualMousePos.y, -200, height + 200);
+          // If already at food, disable
+          // Check for collision with food
+          if (PVector.dist(spine.joints.get(0), foodPosition) < 20) {
+              // If fish hits the food, no longer follow click
+              followClick = false;
+          }
+        }
+        // normal behaviour
+        else {
+          speed = 0.7;
+          
+          // Check if the fish has reached its lifetime
+          if (age >= lifetime) {
+              dangerZone = -300; // this makes the fish able to exit while moving normally
+          }
+          
+          // Enter safe zone first, then move normally
+          if (isEnteringSafeZone) {
+            moveToSafeZone();
+          }
+          else {
+            normalMovement(fishes);
+            // Update the virtual mouse position based on its current direction
+            virtualMousePos.add(virtualMouseDir);
+            
+            // Constrain the virtual mouse to stay within the canvas, but allow it to approach the edges
+            virtualMousePos.x = constrain(virtualMousePos.x, -200, width + 200);
+            virtualMousePos.y = constrain(virtualMousePos.y, -200, height + 200);
+          }
         }
         
 
